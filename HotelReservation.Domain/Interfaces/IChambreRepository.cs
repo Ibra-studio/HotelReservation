@@ -12,11 +12,11 @@ namespace HotelReservation.Domain.Interfaces
         Task<Chambre?> GetById(Guid id);
 
         Task<List<Chambre>> GetAll();
-        Task<List<Chambre>> GetDisponibilte(DateOnly dateArrivee , DateOnly dateDepart);
+        Task<List<Chambre>> GetDisponibilite(DateOnly dateArrivee , DateOnly dateDepart);
 
         Task Add(Chambre chambre);
         Task Update(Chambre chambre);
 
-        Task Annuler(Chambre chambre);
+        Task Delete(Chambre chambre);
     }
 }

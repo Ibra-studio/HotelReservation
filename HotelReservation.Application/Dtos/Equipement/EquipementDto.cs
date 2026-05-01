@@ -8,8 +8,7 @@ namespace HotelReservation.Application.Dtos.Equipement
     public record EquipementDto
     (
         Guid Id,
-        string Nom,
-        List<ChambreDto> chambre
+        string Nom
 
     );
 }
