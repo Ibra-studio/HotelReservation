@@ -10,7 +10,7 @@ using System.Text;
 
 namespace HotelReservation.Application.Services
 {
-    public class FactureServices : IFactureService
+    public class FactureService : IFactureService
     {
         private readonly IFactureRepository _factureRepository;
         private readonly IReservationRepository _reservationRepository;
@@ -18,7 +18,7 @@ namespace HotelReservation.Application.Services
         private readonly ITarifRepository _tarifRepository;
 
 
-        public FactureServices(IFactureRepository factureRepository, IReservationRepository reservationRepository, IChambreRepository chambreRepository,ITarifRepository tarifRepository)
+        public FactureService(IFactureRepository factureRepository, IReservationRepository reservationRepository, IChambreRepository chambreRepository,ITarifRepository tarifRepository)
         {
             _factureRepository = factureRepository;
             _reservationRepository = reservationRepository;

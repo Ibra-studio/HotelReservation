@@ -7,6 +7,6 @@ namespace HotelReservation.Application.Dtos.Equipement
 {
     public record CreateEquipementDto
     (
-        [Required][StringLength(50)] string Nomr
+        [Required][StringLength(50)] string Nom
     );
 }

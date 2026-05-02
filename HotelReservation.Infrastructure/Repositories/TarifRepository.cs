@@ -2,6 +2,7 @@
 using HotelReservation.Domain.Enums;
 using HotelReservation.Domain.Interfaces;
 using HotelReservation.Infrastructure.Persistence;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -14,8 +14,8 @@ namespace HotelReservation.Infrastructure.Persistence.Configurations
         {
             builder.ToTable("Tarifs");
             builder.HasKey(t => t.Id);
-            builder.Property(t => t.TypeChambre).IsRequired().HasConversion<string>().HasDefaultValue(TypeChambre.Simple);
-            builder.Property(t => t.Saison).IsRequired().HasDefaultValue(Season.BasseSaison).HasConversion<string>();
+            builder.Property(t => t.TypeChambre).IsRequired().HasConversion<string>();
+            builder.Property(t => t.Saison).IsRequired().HasConversion<string>();
             builder.Property(t => t.PrixParNuit).IsRequired().HasColumnType("decimal(10,2)");
 
             //Tarif unique pour chaque combinaison de TypeChambre et Saison

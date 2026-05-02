@@ -6,8 +6,8 @@ namespace HotelReservation.Domain.Enums
 {
     public enum Season
     {
-        HauteSaison,
-        BasseSaison,
-        PeriodeSpeciale
+        HauteSaison=1,
+        BasseSaison=2,
+        PeriodeSpeciale=3
     }
 }
