@@ -14,10 +14,6 @@ namespace HotelReservation.Domain.Entities
         public Season Saison { get; set; } = Season.BasseSaison;
 
         public decimal PrixParNuit { get; set; }
-
-        public DateOnly DateDebut { get; set; } // date de début de validité du tarif pour la haute saison par exemple 1 juillet
-
-        public DateOnly DateFin { get; set; } // date de fin de validité du tarif pour la haute saison par exemple 31 août
        
 
     }

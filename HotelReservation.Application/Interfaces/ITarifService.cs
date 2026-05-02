@@ -11,7 +11,7 @@ namespace HotelReservation.Application.Interfaces
         Task<List<TarifDto>> GetAll();
         Task<TarifDto?> GetByTypeAndSaison(TypeChambre type, Season saison);
         Task Add(CreateTarifDto dto);
-        Task Update(Guid id, UpdateTarifDto dto);
+        Task Update(Guid id,UpdateTarifDto dto);
     }
 
 }
