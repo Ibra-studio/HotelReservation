@@ -9,7 +9,7 @@ namespace HotelReservation.Application.Dtos.User
     (
         Guid Id,
         string Nom,
-        string Couriel,
+        string Courriel,
         RoleUser Role,
         bool EstActif
     );

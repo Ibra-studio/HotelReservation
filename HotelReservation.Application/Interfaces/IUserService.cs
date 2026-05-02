@@ -10,7 +10,9 @@ namespace HotelReservation.Application.Interfaces
         Task<List<UserDto>> GetAll();
         Task<UserDto?> GetById(Guid id);
         Task Add(CreateUserDto dto);
-        Task Update(Guid id, UpdateUserDto dto);
+
+        Task UpdatePassword(Guid id, UpdatePasswordDto dto);
+        Task UpdateProfil(Guid id, UpdateUserDto dto);
         Task Desactiver(Guid id);
         Task<string> Login(LoginDto dto);  // ← retourne le token JWT
     }

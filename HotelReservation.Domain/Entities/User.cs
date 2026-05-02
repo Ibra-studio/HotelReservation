@@ -9,7 +9,7 @@ namespace HotelReservation.Domain.Entities
     {
         public Guid Id { get; set; }
         public required string Nom { get; set; }
-        public required string Couriel { get; set; }
+        public required string Courriel{ get; set; }
 
         public required string PasswordHash { get; set; }
 
