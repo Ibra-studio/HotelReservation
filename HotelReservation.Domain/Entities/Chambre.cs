@@ -9,7 +9,7 @@ namespace HotelReservation.Domain.Entities
     {
         public Guid Id { get; set; }
 
-        public  required string numChambre { get; set; }
+        public  required string NumChambre { get; set; }
         public TypeChambre Type { get; set; } = TypeChambre.Simple;
 
         public  int Etage { get; set; }

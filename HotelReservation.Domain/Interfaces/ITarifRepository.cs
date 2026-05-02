@@ -8,7 +8,7 @@ namespace HotelReservation.Domain.Interfaces
 {
     public interface ITarifRepository
     {
-        Task<Tarif?> GetByTypeAndSaison(TypeChambre typeChambre, Saison saison);
+        Task<Tarif?> GetByTypeAndSaison(TypeChambre typeChambre, Season saison);
         Task<List<Tarif>> GetAll();
 
         Task Add(Tarif tarif);

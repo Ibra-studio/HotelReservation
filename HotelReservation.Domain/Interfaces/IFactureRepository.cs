@@ -12,7 +12,7 @@ namespace HotelReservation.Domain.Interfaces
 
       Task<Facture?> GetByReservationId(Guid reservationId);
 
-      Task<List<Facture>> GetByClientID(Guid clientID);
+      Task<List<Facture>> GetByClientId(Guid clientId);
 
       Task<List<Facture>> GetAll();
 

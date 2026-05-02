@@ -1,4 +1,5 @@
-﻿using HotelReservation.Domain.Enums;
+﻿using HotelReservation.Application.Dtos.Tarif;
+using HotelReservation.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;

@@ -2,6 +2,7 @@
 using HotelReservation.Application.Dtos.Equipement;
 using HotelReservation.Application.Interfaces;
 using HotelReservation.Domain.Entities;
+using HotelReservation.Domain.Enums;
 using HotelReservation.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace HotelReservation.Application.Services
             _equipementRepository = equipementRepository;
         }
 
+        //Avec ça tu peux afficher une vue complete des chambres avec surtout leur statut si occupee ou libre ou en maintenance
         public async Task<List<ChambreDto>> GetAll()
         {
             var chambres = await _chambreRepository.GetAll();
@@ -29,7 +31,7 @@ namespace HotelReservation.Application.Services
             return chambres.Select(c => new ChambreDto
             (
                c.Id,
-               c.numChambre,
+               c.NumChambre,
                c.Type,
                c.Etage,
                c.CapaciteAccueil,
@@ -50,7 +52,7 @@ namespace HotelReservation.Application.Services
             return new ChambreDto
             (
                chambre.Id,
-               chambre.numChambre,
+               chambre.NumChambre,
                chambre.Type,
                chambre.Etage,
                chambre.CapaciteAccueil,
@@ -71,16 +73,16 @@ namespace HotelReservation.Application.Services
             return chambres.Select(c => new ChambreDto
             (
                c.Id,
-               c.numChambre,
+               c.NumChambre,
                c.Type,
                c.Etage,
                c.CapaciteAccueil,
                c.Description,
                c.Statut,
-               c.Equipements.Select(c => new EquipementDto
+               c.Equipements.Select(e => new EquipementDto
                (
-                   c.Id,
-                   c.Nom
+                   e.Id,
+                   e.Nom
                 )).ToList()
             )).ToList();
         }
@@ -90,12 +92,11 @@ namespace HotelReservation.Application.Services
             var chambre = new Chambre
             {
                 Id = Guid.NewGuid(),
-                numChambre = dto.numChambre,
+                NumChambre = dto.NumChambre,
                 Type = dto.Type,
                 Etage = dto.Etage,
                 CapaciteAccueil = dto.CapaciteAccueil,
-                Description = dto.Description,
-                Statut = dto.Statut
+                Description = dto.Description
             };
             await _chambreRepository.Add(chambre);
         }
@@ -103,7 +104,7 @@ namespace HotelReservation.Application.Services
         {
             var chambre = await _chambreRepository.GetById(id);
             if (chambre == null) throw new Exception("Chambre introuvable");
-            chambre.numChambre = dto.numChambre;
+            chambre.NumChambre = dto.NumChambre;
             chambre.Type = dto.Type;
             chambre.CapaciteAccueil = dto.CapaciteAccueil;
             chambre.Description = dto.Description;
@@ -111,11 +112,12 @@ namespace HotelReservation.Application.Services
             await _chambreRepository.Update(chambre);
 
         }
-        public async Task Delete(Guid id)
+        public async Task Desactiver(Guid id)
         {
             var chambre = await _chambreRepository.GetById(id);
-            if (chambre == null) throw new Exception("Chambre not found");
-            await _chambreRepository.Delete(chambre);
+            if (chambre == null) throw new Exception("Chambre introuvable");
+            chambre.Statut = StatutChambre.Desactivee;
+            await _chambreRepository.Update(chambre);
         }
 
         public async Task AjouterEquiments(Guid chambreId, Guid equipementId)

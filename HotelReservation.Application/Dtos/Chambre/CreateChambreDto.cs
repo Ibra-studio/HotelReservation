@@ -8,13 +8,12 @@ namespace HotelReservation.Application.Dtos.Chambre
 {
     public record CreateChambreDto
  (
-     [Required] string numChambre,
+     [Required] string NumChambre,
      TypeChambre Type,
      [Range(1,100)]int Etage,
      [Range(1,10)]int CapaciteAccueil,
      string? Description,
-     List<Guid> EquipementIds,
-     StatutChambre Statut = StatutChambre.Disponible
+     List<Guid> EquipementIds
   );
 }
 

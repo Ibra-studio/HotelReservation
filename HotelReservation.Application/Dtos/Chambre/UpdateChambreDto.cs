@@ -9,7 +9,7 @@ namespace HotelReservation.Application.Dtos.Chambre
     public record UpdateChambreDto
 (
 
-    [Required] string numChambre,
+    [Required] string NumChambre,
     [Required] TypeChambre Type,
     [Range(1, 10)] int CapaciteAccueil,
     string? Description,

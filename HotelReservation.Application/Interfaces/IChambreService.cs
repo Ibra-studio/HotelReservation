@@ -15,9 +15,9 @@ namespace HotelReservation.Application.Interfaces
 
         Task Add(CreateChambreDto dto);
         Task Update(Guid id, UpdateChambreDto dto);
-        Task Delete(Guid id);
+        Task Desactiver(Guid id);
         Task AjouterEquiments(Guid chambreId, Guid equipementId);
-        Task RetirerEquiments(Guid chambreId, Guid equipementId);
+        Task RetirerEquipements(Guid chambreId, Guid equipementId);
     }
 
 }

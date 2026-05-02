@@ -9,7 +9,7 @@ namespace HotelReservation.Application.Dtos.Chambre
     public  record ChambreDto
     (
         Guid Id,
-        string numChambre,
+        string NumChambre,
         TypeChambre Type,
         int Etage,
         int CapaciteAccueil,
