@@ -10,7 +10,7 @@ namespace HotelReservation.Application.Interfaces
         Task<FactureDto?> GetById(Guid id);
         Task<FactureDto?> GetByReservationId(Guid reservationId);
         Task<List<FactureDto>> GetByClientId(Guid clientId);
-        Task<FactureDto> Generer(Guid reservationId);
+        Task<FactureDto?> Generer(Guid reservationId);
     }
 
 }

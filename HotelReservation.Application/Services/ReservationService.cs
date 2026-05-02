@@ -139,7 +139,7 @@ namespace HotelReservation.Application.Services
             await _reservationRepository.Update(reservation);
         }
 
-        public async Task<FactureDto> CheckOut(Guid reservationId)
+        public async Task<FactureDto?> CheckOut(Guid reservationId)
         {
             var reservation = await _reservationRepository.GetById(reservationId);
             if (reservation == null) throw new Exception("Reservation introuvable");

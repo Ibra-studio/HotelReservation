@@ -18,7 +18,17 @@ namespace HotelReservation.Domain.Entities
         public DateOnly DateDepart { get; set; }
 
       
-        public int NombrePersonnes { get; set; } = 1;
+        private int _nombrePersonnes = 1;
+        public int NombrePersonnes
+        {
+            get => _nombrePersonnes;
+            set
+            {
+                if (value < 1 || value > 5)
+                    throw new ArgumentOutOfRangeException(nameof(NombrePersonnes), "Le nombre de personnes doit être compris entre 1 et 5.");
+                _nombrePersonnes = value;
+            }
+        }
 
         public StatutReservation Statut { get; set; } = StatutReservation.Confirmee;
         

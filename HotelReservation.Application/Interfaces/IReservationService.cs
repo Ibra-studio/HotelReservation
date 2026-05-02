@@ -15,7 +15,7 @@ namespace HotelReservation.Application.Interfaces
         Task Update(Guid id, UpdateReservationDto dto);
         Task Annuler(Guid id);
         Task CheckIn(Guid id);
-        Task<FactureDto> CheckOut(Guid id);
+        Task<FactureDto?> CheckOut(Guid id);
     }
 
 }

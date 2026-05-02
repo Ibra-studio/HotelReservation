@@ -103,7 +103,7 @@ namespace HotelReservation.Application.Services
             )).ToList();
         }
 
-        public async Task<FactureDto> Generer(Guid reservationId)
+        public async Task<FactureDto?> Generer(Guid reservationId)
         {
             var reservation = await _reservationRepository.GetById(reservationId);
             if (reservation == null)

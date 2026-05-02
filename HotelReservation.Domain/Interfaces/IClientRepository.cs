@@ -15,6 +15,6 @@ namespace HotelReservation.Domain.Interfaces
         Task<Client?> GetByNumIdentite(string num);
         Task Add(Client client);
         Task Update(Client client);
-        Task Desactiver(Guid id);
+      
     }
 }

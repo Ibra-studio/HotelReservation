@@ -14,7 +14,17 @@ namespace HotelReservation.Domain.Entities
 
         public  int Etage { get; set; }
 
-        public  int CapaciteAccueil { get; set; }
+        private int _capaciteAccueil;
+        public  int CapaciteAccueil
+        {
+            get => _capaciteAccueil;
+            set
+            {
+                if (value < 1 || value > 5)
+                    throw new ArgumentOutOfRangeException(nameof(CapaciteAccueil), "La capacité d'accueil doit être comprise entre 1 et 5.");
+                _capaciteAccueil = value;
+            }
+        }
 
         public  string ? Description { get; set; }
 
