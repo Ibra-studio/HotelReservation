@@ -15,7 +15,7 @@ namespace HotelReservation.Domain.Interfaces
         Task Add(Tarif tarif);
         Task Update(Tarif tarif);
 
-        Task Delete(Tarif tarif);
+       
 
     }
 }

@@ -12,7 +12,7 @@ namespace HotelReservation.Domain.Interfaces
 
         Task Add(Reservation reservation);
         Task Update(Reservation reservation);
-        Task Delete(Guid id);
+       
 
     }
 }

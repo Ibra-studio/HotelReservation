@@ -17,7 +17,7 @@ namespace HotelReservation.Domain.Interfaces
       Task<List<Facture>> GetAll();
 
       Task Add(Facture facture);
-      Task Update(Facture facture);
+
  
     }
 }

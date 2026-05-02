@@ -17,6 +17,6 @@ namespace HotelReservation.Domain.Interfaces
         Task Add(Chambre chambre);
         Task Update(Chambre chambre);
 
-        Task Delete(Chambre chambre);
+       
     }
 }
