@@ -74,37 +74,20 @@ namespace HotelReservation.API.Controllers
             [HttpPut("{id}")]
             public async Task<IActionResult> Update(Guid id, UpdateClientDto dto)
             {
-                try
-                {
+                
                     await _clientService.Update(id, dto);
                     return Ok("Client mis à jour avec succès");
-                }
-                catch(KeyNotFoundException ex)
-                {
-                    return NotFound(ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    return StatusCode(500,ex.Message);
-                }
+                
             }
 
             // DELETE api/clients/{id}
             [HttpDelete("{id}")]
             public async Task<IActionResult> Desactiver(Guid id)
             {
-                try
-                {
+                
                     await _clientService.Desactiver(id);
                     return Ok("Client désactivé avec succès");
-                } catch(KeyNotFoundException ex)
-                {
-                    return NotFound(ex.Message);
-                }
-                catch (Exception ex)
-                {
-                    return NotFound(ex.Message);
-                }
+               
             }
         }
     }

@@ -17,10 +17,10 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/Reservations/{id}
-        [HttpGet("{id}")]
-        public  async Task<IActionResult> GetById(Guid id)
+        [HttpGet("{reservationId}")]
+        public  async Task<IActionResult> GetById(Guid reservationId)
         {
-            var reservation = await _reservationService.GetById(id);
+            var reservation = await _reservationService.GetById(reservationId);
             if (reservation == null) return NotFound("reservation introuvable");
             return Ok(reservation);
         }
@@ -39,105 +39,54 @@ namespace HotelReservation.API.Controllers
 
         public async  Task<IActionResult> Add(CreateReservationDto dto)
         {
-            try
-            {
+           
                 await _reservationService.Add(dto);
                 return Ok("reservation Crée avec succès");
 
-            } catch(InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            
-            }catch(Exception ex) {
-
-                return StatusCode(500, ex.Message);
-            }
 
         }
         //api/Reservations/{id}
-        [HttpPut("{id}")]
+        [HttpPut("{reservationId}")]
 
-        public async Task<IActionResult> Update(Guid id, UpdateReservationDto dto)
+        public async Task<IActionResult> Update(Guid reservationId, UpdateReservationDto dto)
         {
-            try
-            {
-                await _reservationService.Update(id, dto);
+           
+                await _reservationService.Update(reservationId, dto);
                 return Ok("Reservation mis à jour avec succès");
-            }
-            catch(KeyNotFoundException ex) {
-                return NotFound(ex.Message);
-            }
-            catch(InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+           
         }
         //api/Reservations/{id}
 
-        [HttpDelete("{id}")]
+        [HttpDelete("{reservationId}")]
 
-        public async Task<IActionResult> Annuler(Guid id)
+        public async Task<IActionResult> Annuler(Guid reservationId)
         {
-            try
-            {
-                await _reservationService.Annuler(id);
+           
+                await _reservationService.Annuler(reservationId);
                 return Ok("Reservation annulée avec succès");
-            }catch(KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }catch(InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex.Message);
-            }
+           
         }
 
         //api/Reservations/{id}/checkin
-        [HttpPut("{id}/checkin")]
-        public async Task<IActionResult> CheckIn(Guid id)
+        [HttpPut("{reservationId}/checkin")]
+        public async Task<IActionResult> CheckIn(Guid reservationId)
         {
-            try
-            {
-                await _reservationService.CheckIn(id);
+            
+                await _reservationService.CheckIn(reservationId);
                 return Ok("Check In effectué avec succès");
-            }catch(KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return NotFound( ex.Message);
-            }
+            
         }
 
         //api/Reservations/{id}/checkout
-        [HttpPut("{id}/checkout")]
+        [HttpPut("{reservationId}/checkout")]
 
         public async Task<IActionResult> CheckOut(Guid reservationId)
         {
 
-            try
-            {
+         
                 var facture = await _reservationService.CheckOut(reservationId);
                 return Ok(facture);
-            }catch(KeyNotFoundException ex)
-            {
-                return NotFound(ex.Message);
-            }catch(InvalidOperationException ex)
-            {
-                return BadRequest(ex.Message);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500,ex.Message);
-            }
+            
         }
 
 

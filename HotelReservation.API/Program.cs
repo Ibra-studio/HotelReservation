@@ -1,3 +1,4 @@
+using HotelReservation.API.Middleware;
 using HotelReservation.Application.Interfaces;
 using HotelReservation.Application.Services;
 using HotelReservation.Domain.Interfaces;
@@ -75,6 +76,7 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
 
 // 5-etape creation du premier User l'admin avec Seeder on a cree DbSeeder dans infra\persistence

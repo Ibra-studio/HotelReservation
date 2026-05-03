@@ -103,7 +103,7 @@ namespace HotelReservation.Application.Services
         public async Task Update(Guid id, UpdateChambreDto dto)
         {
             var chambre = await _chambreRepository.GetById(id);
-            if (chambre == null) throw new Exception("Chambre introuvable");
+            if (chambre == null) throw new KeyNotFoundException("Chambre introuvable");
             chambre.NumChambre = dto.NumChambre;
             chambre.Type = dto.Type;
             chambre.CapaciteAccueil = dto.CapaciteAccueil;
@@ -115,7 +115,7 @@ namespace HotelReservation.Application.Services
         public async Task Desactiver(Guid id)
         {
             var chambre = await _chambreRepository.GetById(id);
-            if (chambre == null) throw new Exception("Chambre introuvable");
+            if (chambre == null) throw new KeyNotFoundException("Chambre introuvable");
             chambre.Statut = StatutChambre.Desactivee;
             await _chambreRepository.Update(chambre);
         }
@@ -123,12 +123,12 @@ namespace HotelReservation.Application.Services
         public async Task AjouterEquiments(Guid chambreId, Guid equipementId)
         {
             var chambre = await _chambreRepository.GetById(chambreId);
-            if (chambre == null) throw new Exception("Chambre Introuvable");
+            if (chambre == null) throw new KeyNotFoundException("Chambre Introuvable");
             var equipement = await _equipementRepository.GetById(equipementId);
-            if (equipement == null) throw new Exception("Equipement introuvable");
+            if (equipement == null) throw new KeyNotFoundException("Equipement introuvable");
 
             bool DejaAjoute = chambre.Equipements.Any(e => e.Id == equipementId);
-            if (DejaAjoute) throw new Exception("Equipement déjà associé à cette chambre");
+            if (DejaAjoute) throw new InvalidOperationException("Equipement déjà associé à cette chambre");
 
             chambre.Equipements.Add(equipement);
             await _chambreRepository.Update(chambre);
