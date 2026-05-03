@@ -54,8 +54,8 @@ namespace HotelReservation.API.Controllers
                 return Ok(client);
             }
 
-            // GET api/clients/{id}/historique
-            [HttpGet("{id}/historique")]
+            // GET api/clients/{id}/historiqueReservation
+            [HttpGet("{id}/historiqueReservation")]
             public async Task<IActionResult> GetHistorique(Guid id)
             {
                 var historique = await _clientService.GetHistorique(id);
@@ -67,7 +67,7 @@ namespace HotelReservation.API.Controllers
             public async Task<IActionResult> Create(CreateClientDto dto)
             {
                 await _clientService.Add(dto);
-                return StatusCode(201, "Client créé avec succès");
+                return Ok("Client créé avec succès");
             }
 
             // PUT api/clients/{id}
@@ -79,9 +79,13 @@ namespace HotelReservation.API.Controllers
                     await _clientService.Update(id, dto);
                     return Ok("Client mis à jour avec succès");
                 }
-                catch (Exception ex)
+                catch(KeyNotFoundException ex)
                 {
                     return NotFound(ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    return StatusCode(500,ex.Message);
                 }
             }
 
@@ -93,6 +97,9 @@ namespace HotelReservation.API.Controllers
                 {
                     await _clientService.Desactiver(id);
                     return Ok("Client désactivé avec succès");
+                } catch(KeyNotFoundException ex)
+                {
+                    return NotFound(ex.Message);
                 }
                 catch (Exception ex)
                 {

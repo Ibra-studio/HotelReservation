@@ -124,7 +124,7 @@ namespace HotelReservation.Application.Services
         public async Task Update(Guid id, UpdateClientDto dto)
         {
             var client = await _clientRepository.GetById(id);
-            if (client == null) throw new Exception("Client introuvable");
+            if (client == null) throw new KeyNotFoundException("Client introuvable");
             client.Nom = dto.Nom;
             client.Prenom = dto.Prenom;
             client.NumeroTelephone = dto.NumeroTelephone;
@@ -135,7 +135,7 @@ namespace HotelReservation.Application.Services
         public async Task Desactiver(Guid id)
         {
             var client = await _clientRepository.GetById(id);
-            if (client == null) throw new Exception("Client introuvable");
+            if (client == null) throw new KeyNotFoundException("Client introuvable");
             client.EstActif = false;
             await _clientRepository.Update(client);
         }

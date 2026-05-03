@@ -70,7 +70,7 @@ namespace HotelReservation.Application.Services
 
             //ensuite on vérifie que la chambre demandée est bien dans la liste des chambres disponibles
             bool estDisponible = ChambresDisponible.Any(c => c.Id == dto.ChambreId);
-            if (!estDisponible) throw new Exception("Chambre non disponible pour les dates sélectionnées");
+            if (!estDisponible) throw new InvalidOperationException("Chambre non disponible pour les dates sélectionnées");
             var reservation = new Reservation
             {
                 Id= Guid.NewGuid(),
@@ -89,16 +89,16 @@ namespace HotelReservation.Application.Services
         public async Task Update(Guid id, UpdateReservationDto dto)
         {
             var reservation = await _reservationRepository.GetById(id);
-            if (reservation == null) throw new Exception("Reservation introuvable");
+            if (reservation == null) throw new KeyNotFoundException("Reservation introuvable");
 
             if (reservation.Statut == StatutReservation.CheckInEffectue)
-                throw new Exception("Impossible de modifier : la reservation est déjà en cours");
+                throw new InvalidOperationException("Impossible de modifier : la reservation est déjà en cours");
 
             if (reservation.Statut == StatutReservation.CheckOutEffectue)
-                throw new Exception("Impossible de modifier : le séjour est terminé");
+                throw new InvalidOperationException("Impossible de modifier : le séjour est terminé");
 
             if (reservation.Statut == StatutReservation.Annulee)
-                throw new Exception("Impossible de modifier : la réservation est annulée");
+                throw new InvalidOperationException("Impossible de modifier : la réservation est annulée");
 
 
             // on Cherche toute les chambres disponibles pour les dates demandées
@@ -106,7 +106,7 @@ namespace HotelReservation.Application.Services
 
             //ensuite on vérifie que la chambre demandée est bien dans la liste des chambres disponibles
             bool estDisponible = ChambresDisponible.Any(c => c.Id == dto.ChambreId);
-            if (!estDisponible) throw new Exception("Chambre non disponible pour les dates sélectionnées");
+            if (!estDisponible) throw new InvalidOperationException("Chambre non disponible pour les dates sélectionnées");
 
 
             reservation.ChambreId = dto.ChambreId;
@@ -120,10 +120,10 @@ namespace HotelReservation.Application.Services
         public async Task Annuler(Guid id)
         {
             var reservation = await _reservationRepository.GetById(id);
-            if (reservation == null) throw new Exception("Reservation introuvable");
+            if (reservation == null) throw new KeyNotFoundException("Reservation introuvable");
 
-            if(reservation.Statut == StatutReservation.CheckOutEffectue) throw new Exception("On ne peut pas annuler une réservation déjà terminée");
-            if(reservation.Statut == StatutReservation.Annulee) throw new Exception("La réservation est déjà annulée");
+            if(reservation.Statut == StatutReservation.CheckOutEffectue) throw new InvalidOperationException("On ne peut pas annuler une réservation déjà terminée");
+            if(reservation.Statut == StatutReservation.Annulee) throw new InvalidOperationException("La réservation est déjà annulée");
 
             reservation.Statut = StatutReservation.Annulee;
             reservation.PenaliteAnnulation = CalculerPenalite(reservation);
@@ -133,7 +133,7 @@ namespace HotelReservation.Application.Services
         public async Task CheckIn(Guid id)
         {
             var reservation = await _reservationRepository.GetById(id);
-            if (reservation == null) throw new Exception("Reservation introuvable");
+            if (reservation == null) throw new KeyNotFoundException("Reservation introuvable");
             reservation.Statut = StatutReservation.CheckInEffectue;
             reservation.HeureArriveeEffective = DateTime.UtcNow;
             await _reservationRepository.Update(reservation);
@@ -142,8 +142,8 @@ namespace HotelReservation.Application.Services
         public async Task<FactureDto?> CheckOut(Guid reservationId)
         {
             var reservation = await _reservationRepository.GetById(reservationId);
-            if (reservation == null) throw new Exception("Reservation introuvable");
-            if(reservation.Statut != StatutReservation.CheckInEffectue) throw new Exception("Check-in non effectué, impossible de faire le check-out");
+            if (reservation == null) throw new KeyNotFoundException("Reservation introuvable");
+            if(reservation.Statut != StatutReservation.CheckInEffectue) throw new InvalidOperationException("Check-in non effectué, impossible de faire le check-out");
             reservation.Statut = StatutReservation.CheckOutEffectue;
             await _reservationRepository.Update(reservation);
             return await _factureService.Generer(reservationId);
