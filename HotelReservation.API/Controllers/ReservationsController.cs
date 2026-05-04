@@ -89,6 +89,12 @@ namespace HotelReservation.API.Controllers
             
         }
 
+        [HttpGet("test")]
+        public async Task<IActionResult> Test()
+        {
+            throw new KeyNotFoundException("test KeyNotFound");
+        }
+
 
 
     }

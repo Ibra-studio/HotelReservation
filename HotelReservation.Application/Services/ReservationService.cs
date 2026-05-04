@@ -105,13 +105,16 @@ namespace HotelReservation.Application.Services
         }
         public async Task Add(CreateReservationDto dto)
         {
+            var chambre = await _chambreRepository.GetById(dto.ChambreId);
+            if (chambre == null) throw new KeyNotFoundException("chambre introuvable");
             // on Cherche toute les chambres disponibles pour les dates demandées
             var ChambresDisponible = await _chambreRepository.GetDisponibilite(dto.DateArrivee, dto.DateDepart);
 
             //ensuite on vérifie que la chambre demandée est bien dans la liste des chambres disponibles
             bool estDisponible = ChambresDisponible.Any(c => c.Id == dto.ChambreId);
             if (!estDisponible) throw new InvalidOperationException("Chambre non disponible pour les dates sélectionnées");
-            var reservation = new Reservation
+            if (dto.NombrePersonnes > chambre.CapaciteAccueil) throw new InvalidOperationException("Le nombre de personne depasse la capacite de la chambre");
+                var reservation = new Reservation
             {
                 Id= Guid.NewGuid(),
                 ClientId = dto.ClientId,
@@ -130,7 +133,8 @@ namespace HotelReservation.Application.Services
         {
             var reservation = await _reservationRepository.GetById(id);
             if (reservation == null) throw new KeyNotFoundException("Reservation introuvable");
-
+            var chambre = await _chambreRepository.GetById(dto.ChambreId);
+            if (chambre == null) throw new KeyNotFoundException("chambre introuvable");
             if (reservation.Statut == StatutReservation.CheckInEffectue)
                 throw new InvalidOperationException("Impossible de modifier : la reservation est déjà en cours");
 
@@ -140,14 +144,15 @@ namespace HotelReservation.Application.Services
             if (reservation.Statut == StatutReservation.Annulee)
                 throw new InvalidOperationException("Impossible de modifier : la réservation est annulée");
 
-
-            // on Cherche toute les chambres disponibles pour les dates demandées
-            var ChambresDisponible = await _chambreRepository.GetDisponibilite(dto.DateArrivee, dto.DateDepart);
-
+            if (reservation.ChambreId != dto.ChambreId) //on teste la disponibilite seulement si la chambre est differente
+            {
+                // on Cherche toute les chambres disponibles pour les dates demandées
+                var ChambresDisponible = await _chambreRepository.GetDisponibilite(dto.DateArrivee, dto.DateDepart);
             //ensuite on vérifie que la chambre demandée est bien dans la liste des chambres disponibles
             bool estDisponible = ChambresDisponible.Any(c => c.Id == dto.ChambreId);
             if (!estDisponible) throw new InvalidOperationException("Chambre non disponible pour les dates sélectionnées");
-
+            }
+            if (dto.NombrePersonnes > chambre.CapaciteAccueil) throw new InvalidOperationException("Le nombre de personne depasse la capacite de la chambre");
 
             reservation.ChambreId = dto.ChambreId;
             reservation.DateArrivee = dto.DateArrivee;
