@@ -4,17 +4,21 @@ using HotelReservation.Domain.Entities;
 using HotelReservation.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text;
 
 namespace HotelReservation.Application.Services
 {
-    public class UserService: IUserService
+    public class UserService : IUserService
     {
         private readonly IUserRepository _userRepository;
+       
+
 
         public UserService(IUserRepository userRepository)
         {
             _userRepository = userRepository;
+            
         }
 
         public async Task<List<UserDto>> GetAll()
@@ -43,35 +47,35 @@ namespace HotelReservation.Application.Services
                 user.EstActif
             );
         }
-            public async Task Add(CreateUserDto dto)
-            {
+        public async Task Add(CreateUserDto dto)
+        {
             var userExistant = await _userRepository.GetByCourriel(dto.Courriel);
-               if (userExistant != null)
-                   throw new Exception("Un utilisateur avec ce courriel existe déjà.");
+            if (userExistant != null)
+                throw new InvalidOperationException("Un utilisateur avec ce courriel existe déjà.");
 
-               var passwordHash= BCrypt.Net.BCrypt.HashPassword(dto.Password); //Pour hasher le mot de passe Avec le nugert BCrypt.Net-Next
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(dto.Password); //Pour hasher le mot de passe Avec le nugert BCrypt.Net-Next
 
-              var user = new User
-                {
-                    Id = Guid.NewGuid(),
-                    Nom = dto.Nom,
-                    Courriel = dto.Courriel,
-                    PasswordHash = passwordHash,
-                    Role = dto.Role,
-                    EstActif = true
-                };
-                await _userRepository.Add(user);
+            var user = new User
+            {
+                Id = Guid.NewGuid(),
+                Nom = dto.Nom,
+                Courriel = dto.Courriel,
+                PasswordHash = passwordHash,
+                Role = dto.Role,
+                EstActif = true
+            };
+            await _userRepository.Add(user);
         }
 
         public async Task UpdatePassword(Guid id, UpdatePasswordDto dto)
         {
             var user = await _userRepository.GetById(id);
             if (user == null)
-                throw new Exception("Utilisateur non trouvé.");
+                throw new KeyNotFoundException("Utilisateur non trouvé.");
             if (!BCrypt.Net.BCrypt.Verify(dto.AncienMotDePasse, user.PasswordHash))
-                throw new Exception("Ancien mot de passe incorrect.");
+                throw new InvalidOperationException("Ancien mot de passe incorrect.");
             if (dto.NouveauMotDePasse != dto.ConfirmationMotDePasse)
-                throw new Exception("La confirmation du mot de passe ne correspond pas.");
+                throw new InvalidOperationException("La confirmation du mot de passe ne correspond pas.");
             user.PasswordHash = BCrypt.Net.BCrypt.HashPassword(dto.NouveauMotDePasse);
             await _userRepository.Update(user);
         }
@@ -79,28 +83,26 @@ namespace HotelReservation.Application.Services
         {
             var user = await _userRepository.GetById(id);
             if (user == null)
-                throw new Exception("Utilisateur non trouvé.");
+                throw new KeyNotFoundException("Utilisateur non trouvé.");
 
-            if(user.Courriel != dto.Courriel)
+            if (user.Courriel != dto.Courriel)
             {
                 var userExistant = await _userRepository.GetByCourriel(dto.Courriel);
                 if (userExistant != null)
-                    throw new Exception("Un utilisateur avec ce courriel existe déjà.");
+                    throw new InvalidOperationException("Un utilisateur avec ce courriel existe déjà.");
             }
             user.Nom = dto.Nom;
             user.Courriel = dto.Courriel;
-            user.Role = dto.Role;
-           
             await _userRepository.Update(user);
         }
 
         public async Task Desactiver(Guid id)
-            {
-                var user = await _userRepository.GetById(id);
-                if (user == null)
-                    throw new Exception("Utilisateur non trouvé.");
-                user.EstActif = false;
-                await _userRepository.Update(user);
+        {
+            var user = await _userRepository.GetById(id);
+            if (user == null)
+                throw new KeyNotFoundException("Utilisateur non trouvé.");
+            user.EstActif = false;
+            await _userRepository.Update(user);
         }
         public async Task<string> Login(LoginDto dto)
         {
@@ -112,6 +114,15 @@ namespace HotelReservation.Application.Services
             // Ici, vous pouvez générer un token JWT ou une session selon votre besoin
             return "TokenJWT_Généré"; // Placeholder pour le token
         }
+
+        //private void VerifierAdministrateur()
+        //{
+        //    var user = _httpContextAccessor.HttpContext?.User;
+        //    var isAdmin = user?.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value == "Admin";
+
+        //    if (!isAdmin)
+        //        throw new UnauthorizedAccessException("Seul un administrateur peut effectuer cette action.");
+        //}
 
     }
 }

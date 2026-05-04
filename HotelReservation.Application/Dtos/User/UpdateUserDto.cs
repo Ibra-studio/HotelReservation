@@ -9,7 +9,7 @@ namespace HotelReservation.Application.Dtos.User
     public record UpdateUserDto
      (
          [Required] string Nom,
-         [Required] [EmailAddress] string Courriel,
-         RoleUser Role
+         [Required] [EmailAddress] string Courriel
+         
        );
 }
