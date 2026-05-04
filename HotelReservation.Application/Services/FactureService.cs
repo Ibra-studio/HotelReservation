@@ -41,6 +41,7 @@ namespace HotelReservation.Application.Services
                 facture.MontantTotal,
                 facture.MontantNuitee,
                 facture.MontantRemise,
+                facture.MontantPenalitee,
                 facture.MontantServices,
                 facture.Statut,
                 facture.LignesFacture.Select(l => new LigneFactureDto
@@ -66,6 +67,7 @@ namespace HotelReservation.Application.Services
                 facture.MontantTotal,
                 facture.MontantNuitee,
                 facture.MontantRemise,
+                facture.MontantPenalitee,
                 facture.MontantServices,
                 facture.Statut,
                 facture.LignesFacture.Select(l => new LigneFactureDto
@@ -90,6 +92,7 @@ namespace HotelReservation.Application.Services
                 f.MontantTotal,
                 f.MontantNuitee,
                 f.MontantRemise,
+                f.MontantPenalitee,
                 f.MontantServices,
                 f.Statut,
                 f.LignesFacture.Select(l => new LigneFactureDto
@@ -108,8 +111,9 @@ namespace HotelReservation.Application.Services
             var reservation = await _reservationRepository.GetById(reservationId);
             if (reservation == null)
                 return null;
-            if(reservation.Statut != StatutReservation.CheckInEffectue)
-                throw new InvalidOperationException("La facture ne peut être générée que pour une réservation avec le statut 'CheckInEffectue'.");
+            
+            if(reservation.Statut != StatutReservation.CheckInEffectue && reservation.Statut != StatutReservation.Annulee)
+                throw new InvalidOperationException("La facture ne peut être générée que pour une réservation avec le statut 'CheckInEffectue' ou 'Annulee' ");
 
             var chambre = await _chambreRepository.GetById(reservation.ChambreId);
             if (chambre == null) throw new Exception("Chambre introuvable");
@@ -120,26 +124,38 @@ namespace HotelReservation.Application.Services
 
             //calculer montant nuitee DayNumber au lieu de Day pour la difference entre 2 dates
             var nombreNuitees = (reservation.DateDepart.DayNumber - reservation.DateArrivee.DayNumber);
+            var montantNuitee = 0m;
             //Calcul des Montants
-            var montantNuitee = nombreNuitees * tarif.PrixParNuit;
-            var montantRemise = reservation.RemiseAppliquee;
-            var montantTotal = montantNuitee - montantRemise;
+            if (nombreNuitees <=0)
+            {
+                 montantNuitee = 0;
+            } else
+            {
+                montantNuitee = nombreNuitees * tarif.PrixParNuit;
 
+            }
+            var montantRemise = reservation.RemiseAppliquee;
+            var montantPenalitee = reservation.PenaliteAnnulation;
+            var montantTotal = (montantNuitee+montantPenalitee)  - montantRemise;
             var lignes=new List<LigneFacture>();
 
-            //Ligne Nuitee
-            var lignesNuitee = new LigneFacture
+            //Ligne Nuitee si au moins une nuit
+            if(nombreNuitees >0)
             {
-                Id = Guid.NewGuid(),
-                Description = $"{nombreNuitees} nuit(s) - Chambre {chambre.NumChambre}",
-                Montant = montantNuitee,
-                Quantite = nombreNuitees,
-                PrixUnitaire = tarif.PrixParNuit
-            };
-            lignes.Add(lignesNuitee);
+                var lignesNuitee = new LigneFacture
+                {
+                    Id = Guid.NewGuid(),
+                    Description = $"{nombreNuitees} nuit(s) - Chambre {chambre.NumChambre}",
+                    Montant = montantNuitee,
+                    Quantite = nombreNuitees,
+                    PrixUnitaire = tarif.PrixParNuit
+                };
+                lignes.Add(lignesNuitee);
+            }
+
             //Ligne Remise si applicable
 
-            if(reservation.RemiseAppliquee >0)
+            if(montantRemise >0)
             {
                 
                 var ligneRemise = new LigneFacture
@@ -153,6 +169,22 @@ namespace HotelReservation.Application.Services
                 lignes.Add(ligneRemise);
             }
 
+            //Ligne Penalitee s'il y'a en
+
+            if (montantPenalitee > 0)
+            {
+
+                var ligneRemise = new LigneFacture
+                {
+                    Id = Guid.NewGuid(),
+                    Description = "Penalitée d'annulation",
+                    Montant = reservation.PenaliteAnnulation,
+                    Quantite = 1,
+                    PrixUnitaire = reservation.PenaliteAnnulation
+                };
+                lignes.Add(ligneRemise);
+            }
+
             var facture= new Facture
             {
                 Id = Guid.NewGuid(),
@@ -161,6 +193,7 @@ namespace HotelReservation.Application.Services
                 MontantTotal = montantTotal,
                 MontantNuitee = montantNuitee,
                 MontantRemise = montantRemise,
+                MontantPenalitee=montantPenalitee,
                 MontantServices = 0, // A compléter si des services sont ajoutés
                 Statut = StatutPaiement.EnAttente,
                 LignesFacture = lignes
@@ -177,6 +210,7 @@ namespace HotelReservation.Application.Services
                    facture.MontantTotal,
                    facture.MontantNuitee,
                    facture.MontantRemise,
+                   facture.MontantPenalitee,
                    facture.MontantServices,
                    facture.Statut,
                    facture.LignesFacture.Select(l => new LigneFactureDto

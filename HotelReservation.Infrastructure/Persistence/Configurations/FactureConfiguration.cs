@@ -29,6 +29,10 @@ namespace HotelReservation.Infrastructure.Persistence.Configurations
                 .HasDefaultValue(0m);
 
 
+            builder.Property(f=> f.MontantPenalitee)
+                .IsRequired()
+                .HasColumnType("decimal(10,2)")
+                .HasDefaultValue(0m);
 
             builder.Property(f => f.MontantNuitee)
                 .IsRequired()

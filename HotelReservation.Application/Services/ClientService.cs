@@ -1,4 +1,5 @@
 ﻿using HotelReservation.Application.Dtos.Client;
+using HotelReservation.Application.Dtos.Facture;
 using HotelReservation.Application.Dtos.Reservation;
 using HotelReservation.Application.Interfaces;
 using HotelReservation.Domain.Entities;
@@ -14,11 +15,13 @@ namespace HotelReservation.Application.Services
 
         private readonly IClientRepository _clientRepository;
         private readonly IReservationRepository _reservationRepository;
+       
 
-        public ClientService(IClientRepository clientRepository, IReservationRepository reservationRepository)
+        public ClientService(IClientRepository clientRepository, IReservationRepository reservationRepository,IFactureRepository factureRepository)
         {
             _clientRepository = clientRepository;
             _reservationRepository = reservationRepository;
+         
         }
 
         public async Task<List<ClientDto>> GetAll()
@@ -103,7 +106,27 @@ namespace HotelReservation.Application.Services
                 r.RemiseAppliquee,
                 r.PenaliteAnnulation,
                 r.Statut,
-                r.DateCreation
+                r.DateCreation,
+                r.Facture == null ? null : new FactureDto
+                (
+                   r.Facture.Id,
+                   r.Facture.ReservationId,
+                   r.Facture.DateEmission,
+                   r.Facture.MontantTotal,
+                   r.Facture.MontantNuitee,
+                   r.Facture.MontantPenalitee,
+                   r.Facture.MontantRemise,
+                   r.Facture.MontantServices,
+                   r.Facture.Statut,
+                   r.Facture.LignesFacture.Select(l => new LigneFactureDto
+                   (
+                       l.Id,
+                       l.Description,
+                       l.Montant,
+                       l.Quantite,
+                       l.PrixUnitaire
+                   )).ToList()
+                )
             )).ToList();
         }
         public async Task Add(CreateClientDto dto)

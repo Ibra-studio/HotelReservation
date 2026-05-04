@@ -1,4 +1,5 @@
-﻿using HotelReservation.Domain.Enums;
+﻿using HotelReservation.Application.Dtos.Facture;
+using HotelReservation.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,7 +18,8 @@ namespace HotelReservation.Application.Dtos.Reservation
         decimal RemiseAppliquee,
         decimal PenaliteAnnulation,
         StatutReservation Statut,
-        DateTime DateCreation
+        DateTime DateCreation,
+        FactureDto? facture
 
     );
 }

@@ -24,7 +24,7 @@ namespace HotelReservation.Infrastructure.Repositories
         }
         public async Task<List<Chambre>> GetAll()
         {
-            return await _context.Chambres.ToListAsync();
+            return await _context.Chambres.Include(c=>c.Equipements).ToListAsync();
         }
 
         public async Task<List<Chambre>> GetDisponibilite(DateOnly dateArrivee, DateOnly dateDepart)

@@ -60,7 +60,7 @@ namespace HotelReservation.Application.Services
         {
 
             var TarifExist = await _tarifRepository.GetByTypeAndSaison(dto.TypeChambre, dto.Saison);
-            if (TarifExist !=null) throw new Exception("Un tarif existe déjà pour ce type de chambre et cette saison");
+            if (TarifExist !=null) throw new InvalidOperationException("Un tarif existe déjà pour ce type de chambre et cette saison");
             var tarif = new Tarif
              {
                  Id= Guid.NewGuid(),

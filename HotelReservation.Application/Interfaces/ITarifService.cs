@@ -8,6 +8,8 @@ namespace HotelReservation.Application.Interfaces
 {
     public interface ITarifService
     {
+
+       Task<TarifDto?> GetById(Guid id);
         Task<List<TarifDto>> GetAll();
         Task<TarifDto?> GetByTypeAndSaison(TypeChambre type, Season saison);
         Task Add(CreateTarifDto dto);

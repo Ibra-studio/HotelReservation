@@ -62,8 +62,8 @@ namespace HotelReservation.API.Controllers
         public async Task<IActionResult> Annuler(Guid reservationId)
         {
            
-                await _reservationService.Annuler(reservationId);
-                return Ok("Reservation annulée avec succès");
+                var facture= await _reservationService.Annuler(reservationId);
+                return Ok(facture);
            
         }
 

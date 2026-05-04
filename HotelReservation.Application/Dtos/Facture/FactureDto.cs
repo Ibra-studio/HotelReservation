@@ -13,6 +13,7 @@ namespace HotelReservation.Application.Dtos.Facture
         decimal MontantTotal,
         decimal MontantNuitee,
         decimal MontantRemise,
+        decimal MontantPenalitee,
         decimal MontantServices,
         StatutPaiement Statut,
         List<LigneFactureDto> LignesFacture

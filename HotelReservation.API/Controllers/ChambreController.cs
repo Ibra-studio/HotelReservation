@@ -1,5 +1,5 @@
 ﻿using HotelReservation.Application.Dtos.Chambre;
-using HotelReservation.Application.Services;
+using HotelReservation.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelReservation.API.Controllers
@@ -8,10 +8,10 @@ namespace HotelReservation.API.Controllers
     [Route("/api/[controller]")]
     public class ChambreController : ControllerBase
     {
-        private readonly ChambreService _chambreService;
+        private readonly IChambreService _chambreService;
 
 
-        public ChambreController(ChambreService chambreService)
+        public ChambreController(IChambreService chambreService)
         {
             _chambreService = chambreService;
         }
@@ -67,7 +67,7 @@ namespace HotelReservation.API.Controllers
             return Ok("Chambre desactivée avec succès");
         }
         //api/chambres/{id}/equipements/{equipementId}
-        [HttpPost("{chambreId}/ajouterEquipements/{equipementID}")]
+        [HttpPost("{chambreId}/ajouterEquipements/{equipementId}")]
         public async Task<IActionResult> AjouterEquiments(Guid chambreId, Guid equipementId)
         {
             await _chambreService.AjouterEquiments(chambreId, equipementId);
@@ -75,7 +75,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/chambres/{id}/equipements/{equipementId}
-        [HttpDelete("{chambreId}/retirerEquipements/{equipementID}")]
+        [HttpDelete("{chambreId}/retirerEquipements/{equipementId}")]
         public async Task<IActionResult> RetirerEquiments(Guid chambreId, Guid equipementId)
         {
             await _chambreService.RetirerEquipements(chambreId, equipementId);

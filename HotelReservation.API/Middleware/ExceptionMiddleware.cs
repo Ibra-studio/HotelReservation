@@ -1,37 +1,51 @@
 ﻿namespace HotelReservation.API.Middleware
 {
-    // API/Middleware/ExceptionMiddleware.cs
-    public class ExceptionMiddleware
-    {
-        private readonly RequestDelegate _next;
-
-        public ExceptionMiddleware(RequestDelegate next)
+        public class ExceptionMiddleware
         {
-            _next = next;
-        }
+            private readonly RequestDelegate _next;
+            private readonly ILogger<ExceptionMiddleware> _logger; //permet de logger les erreurs dans vs
 
-        public async Task InvokeAsync(HttpContext context)
-        {
-            try
+            public ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
             {
-                await _next(context);
+                _next = next;
+                _logger = logger;
             }
-            catch (KeyNotFoundException ex)
+
+            public async Task InvokeAsync(HttpContext context)
             {
-                context.Response.StatusCode = 404;
-                await context.Response.WriteAsJsonAsync(new { message = ex.Message });
+                try
+                {
+                    await _next(context);
+                }
+                catch (KeyNotFoundException ex)
+                {
+                    _logger.LogWarning(ex, "KeyNotFoundException capturée");
+                    await HandleExceptionAsync(context, 404, ex.Message);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    _logger.LogWarning(ex, "InvalidOperationException capturée");
+                    await HandleExceptionAsync(context, 400, ex.Message);
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex, "Exception non gérée");
+                    await HandleExceptionAsync(context, 500, ex.Message);
+                }
             }
-            catch (InvalidOperationException ex)
+
+            private static Task HandleExceptionAsync(HttpContext context, int statusCode, string message)
             {
-                context.Response.StatusCode = 400;
-                await context.Response.WriteAsJsonAsync(new { message = ex.Message });
-            }
-            catch (Exception ex)
-            {
-                context.Response.StatusCode = 500;
-                await context.Response.WriteAsJsonAsync(new { message = ex.Message });
+                if (context.Response.HasStarted)  // sans ça si asp.net à envoyer la reponse avant que l'exception soit attrapee , on ne peut plus modifier le status code
+                {
+                    return Task.CompletedTask;
+                }
+
+                context.Response.StatusCode = statusCode;
+                context.Response.ContentType = "application/json";
+                return context.Response.WriteAsJsonAsync(new { message });
             }
         }
     }
 
-}
+

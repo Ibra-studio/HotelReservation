@@ -41,7 +41,27 @@ namespace HotelReservation.Application.Services
                   reservation.RemiseAppliquee,
                   reservation.PenaliteAnnulation,
                   reservation.Statut,
-                  reservation.DateCreation
+                  reservation.DateCreation,
+                  reservation.Facture == null ? null : new FactureDto
+                (
+                   reservation.Facture.Id,
+                   reservation.Facture.ReservationId,
+                   reservation.Facture.DateEmission,
+                   reservation.Facture.MontantTotal,
+                   reservation.Facture.MontantNuitee,
+                    reservation.Facture.MontantRemise,
+                    reservation.Facture.MontantPenalitee,
+                   reservation.Facture.MontantServices,
+                    reservation.Facture.Statut,
+                    reservation.Facture.LignesFacture.Select(l => new LigneFactureDto
+                   (
+                       l.Id,
+                       l.Description,
+                       l.Montant,
+                       l.Quantite,
+                       l.PrixUnitaire
+                   )).ToList()
+                )
                 );
 
         }
@@ -49,7 +69,7 @@ namespace HotelReservation.Application.Services
         {
             var reservations = await _reservationRepository.GetByClientId(clientId);
             return reservations.Select(reservation => new ReservationDto
-                (
+                 (
                   reservation.Id,
                   reservation.ClientId,
                   reservation.ChambreId,
@@ -60,7 +80,27 @@ namespace HotelReservation.Application.Services
                   reservation.RemiseAppliquee,
                   reservation.PenaliteAnnulation,
                   reservation.Statut,
-                  reservation.DateCreation
+                  reservation.DateCreation,
+                  reservation.Facture == null ? null : new FactureDto
+                (
+                   reservation.Facture.Id,
+                   reservation.Facture.ReservationId,
+                   reservation.Facture.DateEmission,
+                   reservation.Facture.MontantTotal,
+                   reservation.Facture.MontantNuitee,
+                    reservation.Facture.MontantRemise,
+                    reservation.Facture.MontantPenalitee,
+                   reservation.Facture.MontantServices,
+                    reservation.Facture.Statut,
+                    reservation.Facture.LignesFacture.Select(l => new LigneFactureDto
+                   (
+                       l.Id,
+                       l.Description,
+                       l.Montant,
+                       l.Quantite,
+                       l.PrixUnitaire
+                   )).ToList()
+                )
                 )).ToList();
         }
         public async Task Add(CreateReservationDto dto)
@@ -117,7 +157,7 @@ namespace HotelReservation.Application.Services
             await _reservationRepository.Update(reservation);
         }
 
-        public async Task Annuler(Guid id)
+        public async Task<FactureDto?> Annuler(Guid id)
         {
             var reservation = await _reservationRepository.GetById(id);
             if (reservation == null) throw new KeyNotFoundException("Reservation introuvable");
@@ -125,15 +165,21 @@ namespace HotelReservation.Application.Services
             if(reservation.Statut == StatutReservation.CheckOutEffectue) throw new InvalidOperationException("On ne peut pas annuler une réservation déjà terminée");
             if(reservation.Statut == StatutReservation.Annulee) throw new InvalidOperationException("La réservation est déjà annulée");
 
-            reservation.Statut = StatutReservation.Annulee;
             reservation.PenaliteAnnulation = CalculerPenalite(reservation);
+            reservation.DateDepart = DateOnly.FromDateTime(DateTime.Now);
+            reservation.Statut = StatutReservation.Annulee;
+            var facture= await _factureService.Generer(id);
             await _reservationRepository.Update(reservation);
+            return facture;
+
         }
 
         public async Task CheckIn(Guid id)
         {
             var reservation = await _reservationRepository.GetById(id);
             if (reservation == null) throw new KeyNotFoundException("Reservation introuvable");
+            if (reservation.Statut == StatutReservation.Annulee) throw new InvalidOperationException("Reservation déjà annulée");
+            if (reservation.Statut == StatutReservation.CheckInEffectue) throw new InvalidOperationException("check in déjà effectuée");
             reservation.Statut = StatutReservation.CheckInEffectue;
             reservation.HeureArriveeEffective = DateTime.UtcNow;
             await _reservationRepository.Update(reservation);
@@ -144,9 +190,14 @@ namespace HotelReservation.Application.Services
             var reservation = await _reservationRepository.GetById(reservationId);
             if (reservation == null) throw new KeyNotFoundException("Reservation introuvable");
             if(reservation.Statut != StatutReservation.CheckInEffectue) throw new InvalidOperationException("Check-in non effectué, impossible de faire le check-out");
+
+            var facture = await _factureService.Generer(reservationId);
+
+          
             reservation.Statut = StatutReservation.CheckOutEffectue;
             await _reservationRepository.Update(reservation);
-            return await _factureService.Generer(reservationId);
+
+            return facture;
         }
 
 

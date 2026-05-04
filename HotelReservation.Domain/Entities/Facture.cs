@@ -17,6 +17,8 @@ namespace HotelReservation.Domain.Entities
         public decimal MontantRemise { get; set; }
 
         public decimal MontantNuitee { get; set; }
+        
+        public decimal MontantPenalitee { get; set; }
 
         public decimal MontantServices { get; set; }
 

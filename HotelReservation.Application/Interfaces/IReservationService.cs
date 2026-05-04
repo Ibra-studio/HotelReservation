@@ -13,7 +13,7 @@ namespace HotelReservation.Application.Interfaces
         Task<List<ReservationDto>> GetByClientId(Guid clientId);
         Task Add(CreateReservationDto dto);
         Task Update(Guid id, UpdateReservationDto dto);
-        Task Annuler(Guid id);
+        Task<FactureDto?> Annuler(Guid id);
         Task CheckIn(Guid id);
         Task<FactureDto?> CheckOut(Guid id);
     }
