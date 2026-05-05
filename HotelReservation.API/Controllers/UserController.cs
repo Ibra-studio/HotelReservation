@@ -17,6 +17,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/Users
+        [Authorize(Roles ="Administrateur")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -25,6 +26,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/Users/{id}
+        [Authorize(Roles = "Administrateur")]
         [HttpGet("{userId}")]
         public async Task<IActionResult> GetById(Guid userId)
         {
@@ -33,7 +35,7 @@ namespace HotelReservation.API.Controllers
             return Ok(user);
         }
         //api/Users
-        //[Authorize(Roles = "Administrateur")]
+        [Authorize(Roles = "Administrateur")]
         [HttpPost]
         public async Task<IActionResult> Add(CreateUserDto dto)
         {
@@ -41,6 +43,7 @@ namespace HotelReservation.API.Controllers
             return Ok("User crée avec succès");
         }
         //api/Users/updatePassword/{id}
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpPut("updatePassword/{id}")]
         public async Task<IActionResult> UpdatePassword(Guid id, UpdatePasswordDto dto)
         {
@@ -48,6 +51,7 @@ namespace HotelReservation.API.Controllers
             return Ok("Password mis à jour avec succès");
         }
         //api/Users/{id}
+        [Authorize(Roles ="Administrateur,Receptionniste")]
         [HttpPut("{clientId}")]
         public async Task<IActionResult> UpdateProfil(Guid clientId, UpdateUserDto dto)
         {
@@ -55,7 +59,7 @@ namespace HotelReservation.API.Controllers
             return Ok("profil utilisateur mis à jour avec succès");
         }
         //api/Users/{id}
-        //[Authorize(Roles = "Administrateur")]
+        [Authorize(Roles = "Administrateur")]
         [HttpDelete("{clientId}")]
         public async Task<IActionResult> Desactiver(Guid clientId)
         {
@@ -63,13 +67,13 @@ namespace HotelReservation.API.Controllers
             return Ok("Utilisateur desactivé avec succès");
         }
 
-        //// POST api/users/login
-        //[HttpPost("login")]
-        //public async Task<IActionResult> Login(LoginDto dto)
-        //{
-        //    var token = await _userService.Login(dto);
-        //    return Ok(new { token });
-        //}
+        // POST api/users/login
+        [HttpPost("login")]
+        public async Task<IActionResult> Login(LoginDto dto)
+        {
+            var token = await _userService.Login(dto);
+            return Ok(new { token });
+        }
 
     }
 }

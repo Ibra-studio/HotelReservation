@@ -2,8 +2,11 @@
 using HotelReservation.Application.Interfaces;
 using HotelReservation.Domain.Entities;
 using HotelReservation.Domain.Interfaces;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
@@ -13,11 +16,12 @@ namespace HotelReservation.Application.Services
     {
         private readonly IUserRepository _userRepository;
        
+        private  readonly IConfiguration _configuration;
 
-
-        public UserService(IUserRepository userRepository)
+        public UserService(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
+            _configuration = configuration;
             
         }
 
@@ -108,12 +112,40 @@ namespace HotelReservation.Application.Services
         {
             var user = await _userRepository.GetByCourriel(dto.Courriel);
             if (user == null || !BCrypt.Net.BCrypt.Verify(dto.Password, user.PasswordHash))
-                throw new Exception("Courriel ou mot de passe incorrect.");
+                throw new InvalidOperationException("Courriel ou mot de passe incorrect.");
             if (!user.EstActif)
-                throw new Exception("Utilisateur désactivé.");
+                throw new InvalidOperationException("Utilisateur désactivé.");
+
+            var token = CreateToken(user);
             // Ici, vous pouvez générer un token JWT ou une session selon votre besoin
-            return "TokenJWT_Généré"; // Placeholder pour le token
+            return token; // Placeholder pour le token
         }
+
+
+        private string CreateToken(User user)
+        {
+            var claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(ClaimTypes.Name, user.Nom),
+                new Claim(ClaimTypes.Role,user.Role.ToString())
+            };
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
+
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                 issuer: _configuration["Jwt:Issuer"],
+                 audience: _configuration["Jwt:Issuer"],
+                 claims: claims,
+                 expires: DateTime.Now.AddDays(1),
+                 signingCredentials: creds
+                );
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
 
         //private void VerifierAdministrateur()
         //{
