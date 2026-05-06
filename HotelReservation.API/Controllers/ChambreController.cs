@@ -1,5 +1,6 @@
 ﻿using HotelReservation.Application.Dtos.Chambre;
 using HotelReservation.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelReservation.API.Controllers
@@ -17,6 +18,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/Chambres
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -25,6 +27,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/Chambres/{id}
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpGet("{chambreId}")]
         public async Task<IActionResult> GetById(Guid chambreId)
         {
@@ -34,6 +37,7 @@ namespace HotelReservation.API.Controllers
             return Ok(chambre);
         }
         //api/Chambres/disponibles?dateArrivee="2025-12-03"&dateDepart="2025-12-12"
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpGet("disponibles")]
         public async Task<IActionResult> GetDisponibles([FromQuery] DateOnly dateArrivee, [FromQuery] DateOnly dateDepart)
         {
@@ -42,6 +46,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/chambres
+        [Authorize(Roles = "Administrateur")]
         [HttpPost]
         public async Task<IActionResult> Add(CreateChambreDto dto)
         {
@@ -51,6 +56,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/chambres/{id}
+        [Authorize(Roles = "Administrateur")]
         [HttpPut("{chambreId}")]
         public async Task<IActionResult> Update(Guid chambreId, UpdateChambreDto dto)
         {
@@ -59,7 +65,7 @@ namespace HotelReservation.API.Controllers
 
         }
         //api/chambres/{id}
-
+        [Authorize(Roles = "Administrateur")]
         [HttpDelete("{chambreId}")]
         public async Task<IActionResult> Desactiver(Guid chambreId)
         {
@@ -67,6 +73,7 @@ namespace HotelReservation.API.Controllers
             return Ok("Chambre desactivée avec succès");
         }
         //api/chambres/{id}/equipements/{equipementId}
+        [Authorize(Roles = "Administrateur")]
         [HttpPost("{chambreId}/ajouterEquipements/{equipementId}")]
         public async Task<IActionResult> AjouterEquiments(Guid chambreId, Guid equipementId)
         {
@@ -75,6 +82,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/chambres/{id}/equipements/{equipementId}
+        [Authorize(Roles = "Administrateur")]
         [HttpDelete("{chambreId}/retirerEquipements/{equipementId}")]
         public async Task<IActionResult> RetirerEquiments(Guid chambreId, Guid equipementId)
         {

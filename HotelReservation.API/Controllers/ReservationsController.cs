@@ -1,6 +1,7 @@
 ﻿using HotelReservation.Application.Dtos.Facture;
 using HotelReservation.Application.Dtos.Reservation;
 using HotelReservation.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelReservation.API.Controllers
@@ -17,6 +18,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/Reservations/{id}
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpGet("{reservationId}")]
         public  async Task<IActionResult> GetById(Guid reservationId)
         {
@@ -25,6 +27,7 @@ namespace HotelReservation.API.Controllers
             return Ok(reservation);
         }
         //api/Reservations/client/{clientId}
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpGet("client/{clientId}")]
 
         public  async Task<IActionResult> GetByClientId(Guid clientId)
@@ -35,6 +38,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/Reservations
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpPost]
 
         public async  Task<IActionResult> Add(CreateReservationDto dto)
@@ -46,6 +50,7 @@ namespace HotelReservation.API.Controllers
 
         }
         //api/Reservations/{id}
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpPut("{reservationId}")]
 
         public async Task<IActionResult> Update(Guid reservationId, UpdateReservationDto dto)
@@ -56,7 +61,7 @@ namespace HotelReservation.API.Controllers
            
         }
         //api/Reservations/{id}
-
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpDelete("{reservationId}")]
 
         public async Task<IActionResult> Annuler(Guid reservationId)
@@ -68,6 +73,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/Reservations/{id}/checkin
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpPut("{reservationId}/checkin")]
         public async Task<IActionResult> CheckIn(Guid reservationId)
         {
@@ -78,6 +84,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/Reservations/{id}/checkout
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpPut("{reservationId}/checkout")]
 
         public async Task<IActionResult> CheckOut(Guid reservationId)
@@ -88,7 +95,7 @@ namespace HotelReservation.API.Controllers
                 return Ok(facture);
             
         }
-
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpGet("test")]
         public async Task<IActionResult> Test()
         {

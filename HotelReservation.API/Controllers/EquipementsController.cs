@@ -1,5 +1,6 @@
 ﻿using HotelReservation.Application.Dtos.Equipement;
 using HotelReservation.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -19,6 +20,7 @@ namespace HotelReservation.API.Controllers
 
 
         //api/Equipements
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -27,6 +29,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/Equipements/{id}
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpGet("{equipementId}")]
 
         public async Task<IActionResult> GetById(Guid equipementId)
@@ -37,6 +40,7 @@ namespace HotelReservation.API.Controllers
 
         }
         //api/Equipements
+        [Authorize(Roles = "Administrateur")]
         [HttpPost]
         public async Task<IActionResult> Add(CreateEquipementDto dto)
         {
@@ -45,6 +49,7 @@ namespace HotelReservation.API.Controllers
         }
 
         //api/Equipements/{id}
+        [Authorize(Roles = "Administrateur")]
         [HttpPut("{equipementId}")]
         public async Task<IActionResult> Update(Guid equipementId, UpdateEquipementDto dto)
         {
@@ -52,6 +57,7 @@ namespace HotelReservation.API.Controllers
             return Ok("Equipement mis à jouur avec succès");
         }
         //api/Equipements/{id}
+        [Authorize(Roles = "Administrateur")]
         [HttpDelete("{equipementId}")]
         public async Task<IActionResult> Delete(Guid id)
         {

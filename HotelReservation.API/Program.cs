@@ -61,7 +61,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 
 
-
+//SCALAR
 builder.Services.AddOpenApi();
 
 
@@ -70,7 +70,7 @@ builder.Services.AddOpenApi();
 var app = builder.Build();
 
 app.UseMiddleware<ExceptionMiddleware>();
-// Configure the HTTP request pipeline.
+// Scalar
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();

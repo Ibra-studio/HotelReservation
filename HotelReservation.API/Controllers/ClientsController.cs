@@ -1,5 +1,6 @@
 ﻿using HotelReservation.Application.Dtos.Client;
 using HotelReservation.Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelReservation.API.Controllers
@@ -20,6 +21,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // GET api/clients
+            [Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpGet]
             public async Task<IActionResult> GetAll()
             {
@@ -28,6 +30,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // GET api/clients/{id}
+            [Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpGet("{id}")]
             public async Task<IActionResult> GetById(Guid id)
             {
@@ -37,6 +40,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // GET api/clients/search/nom/{nom}
+            [Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpGet("search/nom/{nom}")]
             public async Task<IActionResult> GetByNom(string nom)
             {
@@ -46,6 +50,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // GET api/clients/search/identite/{num}
+            [Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpGet("search/identite/{num}")]
             public async Task<IActionResult> GetByNumIdentite(string num)
             {
@@ -55,6 +60,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // GET api/clients/{id}/historiqueReservation
+            [Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpGet("{id}/historiqueReservation")]
             public async Task<IActionResult> GetHistorique(Guid id)
             {
@@ -63,6 +69,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // POST api/clients
+            [Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpPost]
             public async Task<IActionResult> Create(CreateClientDto dto)
             {
@@ -71,6 +78,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // PUT api/clients/{id}
+            [Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpPut("{id}")]
             public async Task<IActionResult> Update(Guid id, UpdateClientDto dto)
             {
@@ -81,6 +89,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // DELETE api/clients/{id}
+            [Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpDelete("{id}")]
             public async Task<IActionResult> Desactiver(Guid id)
             {

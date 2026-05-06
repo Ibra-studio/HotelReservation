@@ -1,6 +1,7 @@
 ﻿using HotelReservation.Application.Dtos.Tarif;
 using HotelReservation.Application.Interfaces;
 using HotelReservation.Domain.Enums;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace HotelReservation.API.Controllers
@@ -17,6 +18,7 @@ namespace HotelReservation.API.Controllers
         }
 
         // GET api/tarifs
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpGet]
         public async Task<IActionResult> GetAll()
         {
@@ -25,6 +27,7 @@ namespace HotelReservation.API.Controllers
         }
 
         // GET api/tarifs/{id}
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpGet("{tarifId}")]
         public async Task<IActionResult> GetById(Guid tarifId)
         {
@@ -34,6 +37,7 @@ namespace HotelReservation.API.Controllers
         }
 
         // GET api/tarifs/typeAndsaison?type=0&saison=0
+        [Authorize(Roles = "Administrateur,Receptionniste")]
         [HttpGet("typeAndSaison")]
         public async Task<IActionResult> GetByTypeAndSaison([FromQuery] TypeChambre type, [FromQuery] Season saison)
         {
@@ -43,6 +47,7 @@ namespace HotelReservation.API.Controllers
         }
 
         // POST api/tarifs
+        [Authorize(Roles = "Administrateur")]
         [HttpPost]
         public async Task<IActionResult> Create(CreateTarifDto dto)
         {
@@ -51,6 +56,7 @@ namespace HotelReservation.API.Controllers
         }
 
         // PUT api/tarifs/{id}
+        [Authorize(Roles = "Administrateur")]
         [HttpPut("{tarifId}")]
         public async Task<IActionResult> Update(Guid tarifId, UpdateTarifDto dto)
         {
