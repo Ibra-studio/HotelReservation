@@ -2,6 +2,7 @@
 using HotelReservation.Application.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace HotelReservation.API.Controllers
 {
@@ -73,6 +74,20 @@ namespace HotelReservation.API.Controllers
         {
             var token = await _userService.Login(dto);
             return Ok(new { token });
+        }
+        // GET api/User/me
+        [Authorize]
+        [HttpGet("me")]
+        public IActionResult GetCurrentUser()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var nom = User.FindFirstValue(ClaimTypes.Name);
+            var role = User.FindFirstValue(ClaimTypes.Role);
+            var email = User.FindFirstValue(ClaimTypes.Email);
+
+            if (userId == null) return Unauthorized();
+
+            return Ok(new { userId, nom, role, email });
         }
 
     }

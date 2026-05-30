@@ -21,7 +21,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // GET api/clients
-            [Authorize(Roles = "Administrateur,Receptionniste")]
+            //[Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpGet]
             public async Task<IActionResult> GetAll()
             {
@@ -30,7 +30,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // GET api/clients/{id}
-            [Authorize(Roles = "Administrateur,Receptionniste")]
+            //[Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpGet("{id}")]
             public async Task<IActionResult> GetById(Guid id)
             {
@@ -69,7 +69,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // POST api/clients
-            [Authorize(Roles = "Administrateur,Receptionniste")]
+            //[Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpPost]
             public async Task<IActionResult> Create(CreateClientDto dto)
             {
@@ -78,7 +78,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // PUT api/clients/{id}
-            [Authorize(Roles = "Administrateur,Receptionniste")]
+            //[Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpPut("{id}")]
             public async Task<IActionResult> Update(Guid id, UpdateClientDto dto)
             {
@@ -89,7 +89,7 @@ namespace HotelReservation.API.Controllers
             }
 
             // DELETE api/clients/{id}
-            [Authorize(Roles = "Administrateur,Receptionniste")]
+            //[Authorize(Roles = "Administrateur,Receptionniste")]
             [HttpDelete("{id}")]
             public async Task<IActionResult> Desactiver(Guid id)
             {
