@@ -21,16 +21,25 @@
                 {
                     _logger.LogWarning(ex, "KeyNotFoundException capturée");
                     await HandleExceptionAsync(context, 404, ex.Message);
+                    
+                }
+                catch (ArgumentOutOfRangeException ex)
+                {
+                    _logger.LogWarning(ex, "ArgumentOutOfRangeException capturée");
+                    await HandleExceptionAsync(context, 400, ex.Message);
+                    
                 }
                 catch (InvalidOperationException ex)
                 {
                     _logger.LogWarning(ex, "InvalidOperationException capturée");
                     await HandleExceptionAsync(context, 400, ex.Message);
+                    
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex, "Exception non gérée");
                     await HandleExceptionAsync(context, 500, ex.Message);
+                   
                 }
             }
 

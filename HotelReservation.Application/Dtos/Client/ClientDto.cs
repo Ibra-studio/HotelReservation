@@ -1,4 +1,6 @@
-﻿using HotelReservation.Domain.Entities;
+﻿using HotelReservation.Application.Dtos.Equipement;
+using HotelReservation.Application.Dtos.Reservation;
+using HotelReservation.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,6 +16,7 @@ namespace HotelReservation.Application.Dtos.Client
        string NumeroTelephone,
        string Email,
        string Adresse,
-       bool EstActif
+       bool EstActif,
+       List<IdReservationDto> Reservations
     );
 }

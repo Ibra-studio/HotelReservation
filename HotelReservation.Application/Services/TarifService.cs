@@ -78,8 +78,6 @@ namespace HotelReservation.Application.Services
             if (tarif == null)
                 return;
 
-            tarif.TypeChambre = dto.TypeChambre;
-            tarif.Saison = dto.Saison;
             tarif.PrixParNuit = dto.PrixParNuit;
 
             await _tarifRepository.Update(tarif);

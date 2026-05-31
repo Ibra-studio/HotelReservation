@@ -61,11 +61,20 @@ namespace HotelReservation.API.Controllers
         }
         //api/Users/{id}
         [Authorize(Roles = "Administrateur")]
-        [HttpDelete("{clientId}")]
-        public async Task<IActionResult> Desactiver(Guid clientId)
+        [HttpDelete("{userId}")]
+        public async Task<IActionResult> Desactiver(Guid userId)
         {
-            await _userService.Desactiver(clientId);
+            await _userService.Desactiver(userId);
             return Ok("Utilisateur desactivé avec succès");
+        }
+
+        //api/Users/{id}
+        [Authorize(Roles = "Administrateur")]
+        [HttpPut("{userId}/reactiver")]
+        public async Task<IActionResult> Reactiver(Guid userId)
+        {
+            await _userService.Reactiver(userId);
+            return Ok("Utilisateur réactivé avec succès");
         }
 
         // POST api/users/login

@@ -14,6 +14,7 @@ namespace HotelReservation.Application.Interfaces
         Task UpdatePassword(Guid id, UpdatePasswordDto dto);
         Task UpdateProfil(Guid id, UpdateUserDto dto);
         Task Desactiver(Guid id);
+        Task Reactiver(Guid id);
         Task<string> Login(LoginDto dto);  // ← retourne le token JWT
     }
 

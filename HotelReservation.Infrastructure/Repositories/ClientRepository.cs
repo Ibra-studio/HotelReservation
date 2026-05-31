@@ -20,7 +20,7 @@ namespace HotelReservation.Infrastructure.Repositories
 
         public async Task<List<Client>> GetAll()
         {
-            return await  _context.Clients.ToListAsync();
+            return await  _context.Clients.Include(c => c.Reservations).ToListAsync();
         }
 
         public async Task<Client?> GetById(Guid id)

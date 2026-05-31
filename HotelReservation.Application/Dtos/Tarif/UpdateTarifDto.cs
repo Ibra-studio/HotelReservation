@@ -6,8 +6,7 @@ using System.Text;
 namespace HotelReservation.Application.Dtos.Tarif
 {
     public record UpdateTarifDto(
-        TypeChambre TypeChambre,
-        Season Saison,
+       
         decimal PrixParNuit
     );
 

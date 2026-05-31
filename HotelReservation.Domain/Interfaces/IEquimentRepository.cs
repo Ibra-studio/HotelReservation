@@ -12,6 +12,7 @@ namespace HotelReservation.Domain.Interfaces
         Task Add(Equipement equipement);
         Task Update(Equipement equipement);
         Task Delete(Guid id);
+        Task<List<Equipement>> GetByIds(List<Guid> ids);
     }
 
 }

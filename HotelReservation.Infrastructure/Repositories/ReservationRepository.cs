@@ -31,6 +31,7 @@ namespace HotelReservation.Infrastructure.Repositories
             return await _context.Reservations
                 .Include(r => r.Chambre)
                 .Include(r => r.Facture)
+                 .ThenInclude(f => f.LignesFacture)
                 .Where(r => r.ClientId == clientId)
                 .ToListAsync();
         }

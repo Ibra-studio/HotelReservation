@@ -34,9 +34,11 @@ namespace HotelReservation.Application.Services
                 c.Prenom,
                 c.NumPieceIdentite,
                 c.NumeroTelephone,
-                c.Email,
-                c.Adresse,
-                c.EstActif
+                c.Email!,
+                c.Adresse!,
+                c.EstActif,
+                c.Reservations?.Select(r => new IdReservationDto(r.Id)).ToList() ?? new List<IdReservationDto>()
+         
             )).ToList();
         }
         public async Task<ClientDto?> GetById(Guid id)
@@ -50,9 +52,10 @@ namespace HotelReservation.Application.Services
                 client.Prenom,
                 client.NumPieceIdentite,
                 client.NumeroTelephone,
-                client.Email,
-                client.Adresse,
-                client.EstActif
+                client.Email!,
+                client.Adresse!,
+                client.EstActif,
+                client.Reservations?.Select(r => new IdReservationDto(r.Id)).ToList() ?? new List<IdReservationDto>()
             );
 
         }
@@ -68,9 +71,10 @@ namespace HotelReservation.Application.Services
                 client.Prenom,
                 client.NumPieceIdentite,
                 client.NumeroTelephone,
-                client.Email,
-                client.Adresse,
-                client.EstActif
+                client.Email!,
+                client.Adresse!,
+                client.EstActif,
+                client.Reservations?.Select(r => new IdReservationDto(r.Id)).ToList() ?? new List<IdReservationDto>()
             );
         }
 
@@ -86,9 +90,10 @@ namespace HotelReservation.Application.Services
                 client.Prenom,
                 client.NumPieceIdentite,
                 client.NumeroTelephone,
-                client.Email,
-                client.Adresse,
-                client.EstActif
+                client.Email!,
+                client.Adresse!,
+                client.EstActif,
+                client.Reservations?.Select(r => new IdReservationDto(r.Id)).ToList() ?? new List<IdReservationDto>()
             );
         }
         public async Task<List<ReservationDto>> GetHistorique(Guid clientId)

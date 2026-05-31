@@ -89,6 +89,10 @@ namespace HotelReservation.Application.Services
 
         public async Task Add(CreateChambreDto dto)
         {
+            var equipements = dto.EquipementIds != null && dto.EquipementIds.Any()
+                ? await _equipementRepository.GetByIds(dto.EquipementIds)
+                : new List<Equipement>();
+
             var chambre = new Chambre
             {
                 Id = Guid.NewGuid(),
@@ -96,21 +100,30 @@ namespace HotelReservation.Application.Services
                 Type = dto.Type,
                 Etage = dto.Etage,
                 CapaciteAccueil = dto.CapaciteAccueil,
-                Description = dto.Description
+                Description = dto.Description,
+                Equipements = equipements
             };
+
             await _chambreRepository.Add(chambre);
         }
         public async Task Update(Guid id, UpdateChambreDto dto)
         {
             var chambre = await _chambreRepository.GetById(id);
             if (chambre == null) throw new KeyNotFoundException("Chambre introuvable");
+
             chambre.NumChambre = dto.NumChambre;
             chambre.Type = dto.Type;
             chambre.CapaciteAccueil = dto.CapaciteAccueil;
             chambre.Description = dto.Description;
             chambre.Statut = dto.Statut;
-            await _chambreRepository.Update(chambre);
 
+            if (dto.EquipementIds != null)
+            {
+                var equipements = await _equipementRepository.GetByIds(dto.EquipementIds);
+                chambre.Equipements = equipements;
+            }
+
+            await _chambreRepository.Update(chambre);
         }
         public async Task Desactiver(Guid id)
         {

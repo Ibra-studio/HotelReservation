@@ -108,6 +108,14 @@ namespace HotelReservation.Application.Services
             user.EstActif = false;
             await _userRepository.Update(user);
         }
+        public async Task Reactiver(Guid id)
+        {
+            var user = await _userRepository.GetById(id);
+            if (user == null)
+                throw new KeyNotFoundException("Utilisateur non trouvé.");
+            user.EstActif = true;
+            await _userRepository.Update(user);
+        }
         public async Task<string> Login(LoginDto dto)
         {
             var user = await _userRepository.GetByCourriel(dto.Courriel);
@@ -129,7 +137,8 @@ namespace HotelReservation.Application.Services
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Nom),
                 new Claim(ClaimTypes.Email, user.Courriel),
-                new Claim(ClaimTypes.Role,user.Role.ToString())
+                new Claim(ClaimTypes.Role,user.Role.ToString()),
+                
             };
             var key = new SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));

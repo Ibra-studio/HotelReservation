@@ -20,11 +20,11 @@ namespace HotelReservation.Infrastructure.Repositories
 
         public async Task<Chambre?> GetById(Guid id)
         {
-            return await _context.Chambres.FirstOrDefaultAsync(c=>c.Id== id);
+            return await _context.Chambres.Include(c => c.Equipements).FirstOrDefaultAsync(c=>c.Id== id);
         }
         public async Task<List<Chambre>> GetAll()
         {
-            return await _context.Chambres.Include(c=>c.Equipements).ToListAsync();
+            return await _context.Chambres.ToListAsync();
         }
 
         public async Task<List<Chambre>> GetDisponibilite(DateOnly dateArrivee, DateOnly dateDepart)

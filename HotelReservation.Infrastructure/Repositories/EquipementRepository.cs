@@ -49,6 +49,12 @@ namespace HotelReservation.Infrastructure.Repositories
             _context.Equipements.Remove(equipement);
             await _context.SaveChangesAsync();
         }
+        public async Task<List<Equipement>> GetByIds(List<Guid> ids)
+        {
+            return await _context.Equipements
+                .Where(e => ids.Contains(e.Id))
+                .ToListAsync();
+        }
     }
 
 }
