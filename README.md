@@ -169,7 +169,7 @@ HotelReservation.API             → Controllers, Middleware, configuration
 
 ## 📄 Licence
 
-Ce projet est réalisé pour à titre académique.
+Ce projet est réalisé  à titre académique.
 
 ---
 
