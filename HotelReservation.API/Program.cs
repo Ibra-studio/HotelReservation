@@ -84,13 +84,17 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// 5-etape creation du premier User l'admin avec Seeder on a cree DbSeeder dans infra\persistence
+// 5-etape remplir la base de donne si pas de donnee avec Seeder on a cree DbSeeder dans infra\persistence
 using (var scope = app.Services.CreateScope())
 {
     var context = scope.ServiceProvider
         .GetRequiredService<AppDbContext>();
-    await DbSeeder.SeedAsync(context);
-}
 
+    if (context is not null)
+    {
+        context.Database.Migrate();
+        await DbSeeder.SeedAsync(context);
+    }
+}
 app.Run();
 
